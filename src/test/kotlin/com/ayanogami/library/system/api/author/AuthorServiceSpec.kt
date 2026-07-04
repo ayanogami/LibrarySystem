@@ -86,25 +86,60 @@ class AuthorServiceSpec : DescribeSpec({
 	}
 
 	describe("著者更新") {
-		context("リクエストが妥当な場合") {
-			it("更新された著者を返す") {
+		context("著者名のみ指定された場合") {
+			it("著者名だけを更新する") {
 				val repository = mockk<AuthorRepository>()
 				val service = AuthorService(repository)
 				val birthDate = LocalDate.of(1867, 2, 9)
+				every { repository.findById(1) } returns Author(
+					id = 1,
+					name = "夏目漱石",
+					birthDate = birthDate,
+				)
 				every { repository.update(1, "夏目 金之助", birthDate) } returns Author(
 					id = 1,
 					name = "夏目 金之助",
 					birthDate = birthDate,
 				)
 
-				val author = service.update(1, "夏目 金之助", birthDate)
+				val author = service.update(1, "夏目 金之助", null)
 
 				author shouldBe Author(
 					id = 1,
 					name = "夏目 金之助",
 					birthDate = birthDate,
 				)
+				verify(exactly = 1) { repository.findById(1) }
 				verify(exactly = 1) { repository.update(1, "夏目 金之助", birthDate) }
+			}
+		}
+
+		context("生年月日のみ指定された場合") {
+			it("生年月日だけを更新する") {
+				val repository = mockk<AuthorRepository>()
+				val service = AuthorService(repository)
+				val birthDate = LocalDate.of(1867, 2, 9)
+				val updatedBirthDate = LocalDate.of(1867, 2, 10)
+				every { repository.findById(1) } returns Author(
+					id = 1,
+					name = "夏目漱石",
+					birthDate = birthDate,
+				)
+				every { repository.update(1, "夏目漱石", updatedBirthDate) } returns Author(
+					id = 1,
+					name = "夏目漱石",
+					birthDate = updatedBirthDate,
+				)
+
+				val author = service.update(1, null, updatedBirthDate)
+
+				author shouldBe Author(
+					id = 1,
+					name = "夏目漱石",
+					birthDate = updatedBirthDate,
+				)
+				verify(exactly = 1) { repository.findById(1) }
+				verify(exactly = 1) { repository.update(1, "夏目漱石", updatedBirthDate) }
 			}
 		}
 
@@ -112,15 +147,30 @@ class AuthorServiceSpec : DescribeSpec({
 			it("AuthorNotFoundException を投げる") {
 				val repository = mockk<AuthorRepository>()
 				val service = AuthorService(repository)
-				val birthDate = LocalDate.of(1867, 2, 9)
-				every { repository.update(999, "夏目 金之助", birthDate) } returns null
+				every { repository.findById(999) } returns null
 
 				val exception = shouldThrow<AuthorNotFoundException> {
-					service.update(999, "夏目 金之助", birthDate)
+					service.update(999, "夏目 金之助", null)
 				}
 
 				exception.message shouldBe "author not found: 999"
-				verify(exactly = 1) { repository.update(999, "夏目 金之助", birthDate) }
+				verify(exactly = 1) { repository.findById(999) }
+				verify(exactly = 0) { repository.update(any(), any(), any()) }
+			}
+		}
+
+		context("著者名も生年月日も未指定の場合") {
+			it("InvalidAuthorException を投げる") {
+				val repository = mockk<AuthorRepository>()
+				val service = AuthorService(repository)
+
+				val exception = shouldThrow<InvalidAuthorException> {
+					service.update(1, null, null)
+				}
+
+				exception.message shouldBe "name or birthDate is required"
+				verify(exactly = 0) { repository.findById(any()) }
+				verify(exactly = 0) { repository.update(any(), any(), any()) }
 			}
 		}
 
@@ -134,6 +184,7 @@ class AuthorServiceSpec : DescribeSpec({
 				}
 
 				exception.message shouldBe "name is required"
+				verify(exactly = 0) { repository.findById(any()) }
 				verify(exactly = 0) { repository.update(any(), any(), any()) }
 			}
 		}
@@ -149,6 +200,7 @@ class AuthorServiceSpec : DescribeSpec({
 				}
 
 				exception.message shouldBe "birthDate must be today or earlier"
+				verify(exactly = 0) { repository.findById(any()) }
 				verify(exactly = 0) { repository.update(any(), any(), any()) }
 			}
 		}

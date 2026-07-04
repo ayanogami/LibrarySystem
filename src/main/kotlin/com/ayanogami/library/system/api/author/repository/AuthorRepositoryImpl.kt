@@ -27,6 +27,21 @@ class AuthorRepositoryImpl(
 		)
 	}
 
+	override fun findById(id: Long): Author? {
+		val record = dsl
+			.select(AUTHORS.ID, AUTHORS.NAME, AUTHORS.BIRTH_DATE)
+			.from(AUTHORS)
+			.where(AUTHORS.ID.eq(id))
+			.fetchOne()
+			?: return null
+
+		return Author(
+			id = record.get(AUTHORS.ID)!!,
+			name = record.get(AUTHORS.NAME)!!,
+			birthDate = record.get(AUTHORS.BIRTH_DATE)!!,
+		)
+	}
+
 	override fun update(id: Long, name: String, birthDate: LocalDate): Author? {
 		val record = dsl
 			.update(AUTHORS)
