@@ -1,10 +1,12 @@
 package com.ayanogami.library.system.api
 
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
-class ApiApplicationSpec : FunSpec({
-	test("Kotest is configured") {
-		"LibrarySystemAPI" shouldBe "LibrarySystemAPI"
+class ApiApplicationSpec : DescribeSpec({
+	describe("Kotest") {
+		it("is configured") {
+			"LibrarySystemAPI" shouldBe "LibrarySystemAPI"
+		}
 	}
 })
