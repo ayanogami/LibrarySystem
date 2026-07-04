@@ -135,7 +135,7 @@ API は以下の 3 種類に分類します。
 | Category | Purpose | Endpoints |
 | --- | --- | --- |
 | 登録系 | 著者・書籍を新規登録する | `POST /authors`, `POST /books` |
-| 更新系 | 著者・書籍を更新する | `PUT /authors/{authorId}`, `PUT /books/{bookId}` |
+| 更新系 | 著者・書籍を更新する | `PATCH /authors/{authorId}`, `PATCH /books/{bookId}` |
 | 参照系 | 著者に紐づく書籍を取得する | `GET /authors/{authorId}/books` |
 
 ### Common Policy
@@ -143,7 +143,7 @@ API は以下の 3 種類に分類します。
 - Request / response body は JSON とします。
 - ID は path parameter で受け取ります。
 - 日付は ISO-8601 形式の `yyyy-MM-dd` で扱います。
-- 更新 API はリソース全体の更新として扱い、HTTP method は `PUT` を使います。
+- 更新 API は指定された項目のみを更新する部分更新として扱い、HTTP method は `PATCH` を使います。
 - API response の enum 値は DB と同じく `UNPUBLISHED`, `PUBLISHED` を返します。
 
 ### Create Author
@@ -189,15 +189,14 @@ POST /authors
 著者を更新します。
 
 ```http
-PUT /authors/{authorId}
+PATCH /authors/{authorId}
 ```
 
 #### Request
 
 ```json
 {
-  "name": "夏目 金之助",
-  "birthDate": "1867-02-09"
+  "name": "夏目 金之助"
 }
 ```
 
@@ -220,8 +219,9 @@ PUT /authors/{authorId}
 | Field | Rule |
 | --- | --- |
 | authorId | 存在する著者 ID |
-| name | 必須 |
-| birthDate | 必須、現在日以前 |
+| name | 任意、指定する場合は空白不可 |
+| birthDate | 任意、指定する場合は現在日以前 |
+| request body | `name` または `birthDate` の少なくとも一方が必要 |
 
 ### Create Book
 
@@ -278,16 +278,14 @@ POST /books
 書籍を更新します。
 
 ```http
-PUT /books/{bookId}
+PATCH /books/{bookId}
 ```
 
 #### Request
 
 ```json
 {
-  "title": "吾輩は猫である",
   "price": 1300,
-  "authorIds": [1],
   "publicationStatus": "PUBLISHED"
 }
 ```
@@ -319,10 +317,11 @@ PUT /books/{bookId}
 | Field | Rule |
 | --- | --- |
 | bookId | 存在する書籍 ID |
-| title | 必須 |
-| price | 必須、0 以上 |
-| authorIds | 必須、1 件以上、すべて存在する著者 ID |
-| publicationStatus | 必須、`UNPUBLISHED` または `PUBLISHED` |
+| title | 任意、指定する場合は空白不可 |
+| price | 任意、指定する場合は 0 以上 |
+| authorIds | 任意、指定する場合は 1 件以上、すべて存在する著者 ID |
+| publicationStatus | 任意、指定する場合は `UNPUBLISHED` または `PUBLISHED` |
+| request body | `title`, `price`, `authorIds`, `publicationStatus` の少なくとも 1 つが必要 |
 
 #### Business Rule
 
