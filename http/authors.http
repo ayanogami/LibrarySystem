@@ -1,0 +1,28 @@
+@baseUrl = http://localhost:8080
+
+### Create author
+POST {{baseUrl}}/authors
+Content-Type: application/json
+
+{
+  "name": "夏目漱石",
+  "birthDate": "1867-02-09"
+}
+
+### Create author fails when name is blank
+POST {{baseUrl}}/authors
+Content-Type: application/json
+
+{
+  "name": "   ",
+  "birthDate": "1867-02-09"
+}
+
+### Create author fails when birth date is future
+POST {{baseUrl}}/authors
+Content-Type: application/json
+
+{
+  "name": "未来 太郎",
+  "birthDate": "2999-01-01"
+}
