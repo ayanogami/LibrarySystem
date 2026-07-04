@@ -9,6 +9,19 @@
 
 ## Requirements
 
+### 実行環境
+
+- JDK 21
+- Docker
+- SDKMAN
+
+JDK は SDKMAN で管理します。
+
+```bash
+sdk env install
+sdk env
+```
+
 ### 技術要件
 
 - Kotlin
