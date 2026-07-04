@@ -6,9 +6,9 @@ import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
 class AuthorServiceSpec : DescribeSpec({
-	describe("create") {
-		context("when the request is valid") {
-			it("returns a created author") {
+	describe("著者作成") {
+		context("リクエストが妥当な場合") {
+			it("作成された著者を返す") {
 				val repository = RecordingAuthorRepository()
 				val service = AuthorService(repository)
 				val birthDate = LocalDate.of(1867, 2, 9)
@@ -25,8 +25,8 @@ class AuthorServiceSpec : DescribeSpec({
 			}
 		}
 
-		context("when birth date is today") {
-			it("returns a created author") {
+		context("生年月日が現在日の場合") {
+			it("作成された著者を返す") {
 				val repository = RecordingAuthorRepository()
 				val service = AuthorService(repository)
 				val today = LocalDate.now()
@@ -38,8 +38,8 @@ class AuthorServiceSpec : DescribeSpec({
 			}
 		}
 
-		context("when name is blank") {
-			it("throws InvalidAuthorException") {
+		context("著者名が空白の場合") {
+			it("InvalidAuthorException を投げる") {
 				val repository = RecordingAuthorRepository()
 				val service = AuthorService(repository)
 
@@ -52,8 +52,8 @@ class AuthorServiceSpec : DescribeSpec({
 			}
 		}
 
-		context("when birth date is future") {
-			it("throws InvalidAuthorException") {
+		context("生年月日が現在日より後の場合") {
+			it("InvalidAuthorException を投げる") {
 				val repository = RecordingAuthorRepository()
 				val service = AuthorService(repository)
 				val tomorrow = LocalDate.now().plusDays(1)

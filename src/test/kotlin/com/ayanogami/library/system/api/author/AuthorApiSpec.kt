@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDate
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,8 +34,8 @@ class AuthorApiSpec : DescribeSpec({
 	}
 
 	describe("POST /authors") {
-		context("when the request is valid") {
-			it("creates an author") {
+		context("リクエストが妥当な場合") {
+			it("著者を作成する") {
 				mockMvc.perform(
 					post("/authors")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -59,8 +60,34 @@ class AuthorApiSpec : DescribeSpec({
 			}
 		}
 
-		context("when name is blank") {
-			it("returns 400 Bad Request") {
+		context("生年月日が現在日の場合") {
+			it("著者を作成する") {
+				val today = LocalDate.now()
+
+				mockMvc.perform(
+					post("/authors")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(
+							"""
+							{
+							  "name": "今日 生まれ",
+							  "birthDate": "$today"
+							}
+							""".trimIndent(),
+						),
+				)
+					.andExpect(status().isCreated)
+					.andExpect(jsonPath("$.name").value("今日 生まれ"))
+					.andExpect(jsonPath("$.birthDate").value(today.toString()))
+
+				val author = dsl.selectFrom(AUTHORS).fetchOne()
+
+				author?.get(AUTHORS.BIRTH_DATE) shouldBe today
+			}
+		}
+
+		context("著者名が空白の場合") {
+			it("400 Bad Request を返す") {
 				mockMvc.perform(
 					post("/authors")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -79,8 +106,8 @@ class AuthorApiSpec : DescribeSpec({
 			}
 		}
 
-		context("when birth date is future") {
-			it("returns 400 Bad Request") {
+		context("生年月日が現在日より後の場合") {
+			it("400 Bad Request を返す") {
 				mockMvc.perform(
 					post("/authors")
 						.contentType(MediaType.APPLICATION_JSON)

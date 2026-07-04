@@ -18,8 +18,8 @@ class DatabaseMigrationSpec : DescribeSpec({
 		dsl = (spec as DatabaseMigrationSpec).dsl
 	}
 
-	describe("Flyway migration") {
-		it("creates library tables") {
+	describe("Flyway マイグレーション") {
+		it("書籍管理に必要なテーブルを作成する") {
 			val tableNames = dsl
 				.fetch(
 					"""
@@ -34,7 +34,7 @@ class DatabaseMigrationSpec : DescribeSpec({
 			tableNames shouldContainAll listOf("authors", "books", "book_authors")
 		}
 
-		it("creates required constraints") {
+		it("必要な制約を作成する") {
 			val constraintNames = dsl
 				.fetch(
 					"""
@@ -57,7 +57,7 @@ class DatabaseMigrationSpec : DescribeSpec({
 			)
 		}
 
-		it("creates an index for looking up books by author") {
+		it("著者に紐づく書籍を取得するためのインデックスを作成する") {
 			val indexExists = dsl
 				.fetchOne(
 					"""
