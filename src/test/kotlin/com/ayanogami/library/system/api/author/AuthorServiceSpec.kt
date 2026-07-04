@@ -1,5 +1,6 @@
 package com.ayanogami.library.system.api.author
 
+import com.ayanogami.library.system.api.author.exception.AuthorNotFoundException
 import com.ayanogami.library.system.api.author.exception.InvalidAuthorException
 import com.ayanogami.library.system.api.author.model.Author
 import com.ayanogami.library.system.api.author.repository.AuthorRepository
@@ -80,6 +81,75 @@ class AuthorServiceSpec : DescribeSpec({
 
 				exception.message shouldBe "birthDate must be today or earlier"
 				verify(exactly = 0) { repository.create(any(), any()) }
+			}
+		}
+	}
+
+	describe("著者更新") {
+		context("リクエストが妥当な場合") {
+			it("更新された著者を返す") {
+				val repository = mockk<AuthorRepository>()
+				val service = AuthorService(repository)
+				val birthDate = LocalDate.of(1867, 2, 9)
+				every { repository.update(1, "夏目 金之助", birthDate) } returns Author(
+					id = 1,
+					name = "夏目 金之助",
+					birthDate = birthDate,
+				)
+
+				val author = service.update(1, "夏目 金之助", birthDate)
+
+				author shouldBe Author(
+					id = 1,
+					name = "夏目 金之助",
+					birthDate = birthDate,
+				)
+				verify(exactly = 1) { repository.update(1, "夏目 金之助", birthDate) }
+			}
+		}
+
+		context("著者IDが存在しない場合") {
+			it("AuthorNotFoundException を投げる") {
+				val repository = mockk<AuthorRepository>()
+				val service = AuthorService(repository)
+				val birthDate = LocalDate.of(1867, 2, 9)
+				every { repository.update(999, "夏目 金之助", birthDate) } returns null
+
+				val exception = shouldThrow<AuthorNotFoundException> {
+					service.update(999, "夏目 金之助", birthDate)
+				}
+
+				exception.message shouldBe "author not found: 999"
+				verify(exactly = 1) { repository.update(999, "夏目 金之助", birthDate) }
+			}
+		}
+
+		context("著者名が空白の場合") {
+			it("InvalidAuthorException を投げる") {
+				val repository = mockk<AuthorRepository>()
+				val service = AuthorService(repository)
+
+				val exception = shouldThrow<InvalidAuthorException> {
+					service.update(1, "   ", LocalDate.of(1867, 2, 9))
+				}
+
+				exception.message shouldBe "name is required"
+				verify(exactly = 0) { repository.update(any(), any(), any()) }
+			}
+		}
+
+		context("生年月日が現在日より後の場合") {
+			it("InvalidAuthorException を投げる") {
+				val repository = mockk<AuthorRepository>()
+				val service = AuthorService(repository)
+				val tomorrow = LocalDate.now().plusDays(1)
+
+				val exception = shouldThrow<InvalidAuthorException> {
+					service.update(1, "未来 太郎", tomorrow)
+				}
+
+				exception.message shouldBe "birthDate must be today or earlier"
+				verify(exactly = 0) { repository.update(any(), any(), any()) }
 			}
 		}
 	}
