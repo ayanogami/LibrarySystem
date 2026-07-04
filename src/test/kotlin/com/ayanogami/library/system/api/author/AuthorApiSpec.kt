@@ -106,6 +106,44 @@ class AuthorApiSpec : DescribeSpec({
 			}
 		}
 
+		context("著者名が未指定の場合") {
+			it("400 Bad Request を返す") {
+				mockMvc.perform(
+					post("/authors")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(
+							"""
+							{
+							  "birthDate": "1867-02-09"
+							}
+							""".trimIndent(),
+						),
+				)
+					.andExpect(status().isBadRequest)
+
+				dsl.fetchCount(AUTHORS) shouldBe 0
+			}
+		}
+
+		context("生年月日が未指定の場合") {
+			it("400 Bad Request を返す") {
+				mockMvc.perform(
+					post("/authors")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(
+							"""
+							{
+							  "name": "夏目漱石"
+							}
+							""".trimIndent(),
+						),
+				)
+					.andExpect(status().isBadRequest)
+
+				dsl.fetchCount(AUTHORS) shouldBe 0
+			}
+		}
+
 		context("生年月日が現在日より後の場合") {
 			it("400 Bad Request を返す") {
 				mockMvc.perform(
