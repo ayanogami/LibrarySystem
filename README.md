@@ -9,6 +9,21 @@
 
 ## Requirements
 
+### 実行環境
+
+- JDK 21
+- Docker
+- SDKMAN
+
+JDK は SDKMAN で管理します。
+
+```bash
+sdk env install
+sdk env
+```
+
+DB の username / password は環境変数で渡します。GitHub Actions では `CI_DB_USERNAME` / `CI_DB_PASSWORD` を Secrets に設定します。
+
 ### 技術要件
 
 - Kotlin
