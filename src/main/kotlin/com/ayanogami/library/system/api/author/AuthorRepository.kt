@@ -6,10 +6,10 @@ import org.springframework.stereotype.Repository
 import java.time.LocalDate
 
 @Repository
-class AuthorRepository(
+class JooqAuthorRepository(
 	private val dsl: DSLContext,
-) {
-	fun create(name: String, birthDate: LocalDate): Author {
+) : AuthorRepository {
+	override fun create(name: String, birthDate: LocalDate): Author {
 		val record = dsl
 			.insertInto(AUTHORS)
 			.set(AUTHORS.NAME, name)
@@ -24,4 +24,8 @@ class AuthorRepository(
 			birthDate = record.get(AUTHORS.BIRTH_DATE)!!,
 		)
 	}
+}
+
+interface AuthorRepository {
+	fun create(name: String, birthDate: LocalDate): Author
 }
