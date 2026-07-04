@@ -50,6 +50,39 @@ SPRING_DATASOURCE_PASSWORD=library_system \
 ./gradlew test
 ```
 
+### PostgreSQL の確認方法
+
+Docker で起動した PostgreSQL には、以下のコマンドで接続できます。
+
+```bash
+docker-compose exec postgres psql -U library_system -d library_system_test
+```
+
+`psql` に入った後は、以下のコマンドでテーブルやデータを確認できます。
+
+```sql
+\dt
+\d authors
+select * from authors;
+select * from flyway_schema_history;
+```
+
+`psql` を終了する場合は、以下を実行します。
+
+```sql
+\q
+```
+
+IntelliJ IDEA の Database ツールウィンドウから確認する場合は、以下の接続情報を使用します。
+
+| Item | Value |
+| --- | --- |
+| Host | `localhost` |
+| Port | `5432` |
+| Database | `library_system_test` |
+| User | `library_system` |
+| Password | `library_system` |
+
 ### 技術要件
 
 - Kotlin
