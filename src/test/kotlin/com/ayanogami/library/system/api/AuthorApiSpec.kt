@@ -33,9 +33,10 @@ class AuthorApiSpec : DescribeSpec({
 	}
 
 	beforeTest {
-		dsl.deleteFrom(BOOK_AUTHORS).execute()
-		dsl.deleteFrom(BOOKS).execute()
-		dsl.deleteFrom(AUTHORS).execute()
+		dsl.truncate(BOOK_AUTHORS, BOOKS, AUTHORS)
+			.restartIdentity()
+			.cascade()
+			.execute()
 	}
 
 	fun createAuthor(
