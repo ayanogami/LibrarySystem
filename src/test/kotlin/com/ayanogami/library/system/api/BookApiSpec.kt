@@ -13,7 +13,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
@@ -218,7 +218,7 @@ class BookApiSpec : DescribeSpec({
 		}
 	}
 
-	describe("PUT /books/{bookId}") {
+	describe("PATCH /books/{bookId}") {
 		context("リクエストが妥当な場合") {
 			it("書籍情報と著者関連を更新する") {
 				val currentAuthorId = createAuthor("夏目漱石")
@@ -227,7 +227,7 @@ class BookApiSpec : DescribeSpec({
 				val bookId = createBook(authorIds = listOf(currentAuthorId))
 
 				mockMvc.perform(
-					put("/books/$bookId")
+					patch("/books/$bookId")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(
 							"""
@@ -266,12 +266,63 @@ class BookApiSpec : DescribeSpec({
 			}
 		}
 
+		context("書籍名のみ指定された場合") {
+			it("書籍名だけを更新する") {
+				val authorId = createAuthor()
+				val bookId = createBook(authorIds = listOf(authorId))
+
+				mockMvc.perform(
+					patch("/books/$bookId")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(
+							"""
+							{
+							  "title": "坊っちゃん"
+							}
+							""".trimIndent(),
+						),
+				)
+					.andExpect(status().isOk)
+					.andExpect(jsonPath("$.id").value(bookId))
+					.andExpect(jsonPath("$.title").value("坊っちゃん"))
+					.andExpect(jsonPath("$.price").value(1200))
+					.andExpect(jsonPath("$.publicationStatus").value("UNPUBLISHED"))
+					.andExpect(jsonPath("$.authors[0].id").value(authorId))
+
+				val book = dsl.selectFrom(BOOKS).where(BOOKS.ID.eq(bookId)).fetchOne()
+				val bookAuthor = dsl.selectFrom(BOOK_AUTHORS).where(BOOK_AUTHORS.BOOK_ID.eq(bookId)).fetchOne()
+
+				book?.get(BOOKS.TITLE) shouldBe "坊っちゃん"
+				book?.get(BOOKS.PRICE) shouldBe 1200
+				book?.get(BOOKS.PUBLICATION_STATUS) shouldBe "UNPUBLISHED"
+				bookAuthor?.get(BOOK_AUTHORS.AUTHOR_ID) shouldBe authorId
+			}
+		}
+
+		context("更新項目が未指定の場合") {
+			it("400 Bad Request を返す") {
+				val authorId = createAuthor()
+				val bookId = createBook(authorIds = listOf(authorId))
+
+				mockMvc.perform(
+					patch("/books/$bookId")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{}"),
+				)
+					.andExpect(status().isBadRequest)
+
+				val book = dsl.selectFrom(BOOKS).where(BOOKS.ID.eq(bookId)).fetchOne()
+
+				book?.get(BOOKS.TITLE) shouldBe "吾輩は猫である"
+			}
+		}
+
 		context("書籍IDが存在しない場合") {
 			it("404 Not Found を返す") {
 				val authorId = createAuthor()
 
 				mockMvc.perform(
-					put("/books/999999")
+					patch("/books/999999")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(
 							"""
@@ -297,7 +348,7 @@ class BookApiSpec : DescribeSpec({
 				val bookId = createBook(authorIds = listOf(authorId))
 
 				mockMvc.perform(
-					put("/books/$bookId")
+					patch("/books/$bookId")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(
 							"""
@@ -324,7 +375,7 @@ class BookApiSpec : DescribeSpec({
 				val bookId = createBook(authorIds = listOf(authorId))
 
 				mockMvc.perform(
-					put("/books/$bookId")
+					patch("/books/$bookId")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(
 							"""
@@ -349,7 +400,7 @@ class BookApiSpec : DescribeSpec({
 				val bookId = createBook(authorIds = listOf(authorId))
 
 				mockMvc.perform(
-					put("/books/$bookId")
+					patch("/books/$bookId")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(
 							"""
@@ -377,7 +428,7 @@ class BookApiSpec : DescribeSpec({
 				)
 
 				mockMvc.perform(
-					put("/books/$bookId")
+					patch("/books/$bookId")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(
 							"""

@@ -197,6 +197,72 @@ class BookServiceSpec : DescribeSpec({
 			}
 		}
 
+		context("書籍名のみ指定された場合") {
+			it("書籍名だけを更新する") {
+				val repository = mockk<BookRepository>()
+				val service = BookService(repository)
+				val author = Author(
+					id = 1,
+					name = "夏目漱石",
+					birthDate = LocalDate.of(1867, 2, 9),
+				)
+				val currentBook = Book(
+					id = 1,
+					title = "吾輩は猫である",
+					price = 1200,
+					publicationStatus = PublicationStatus.UNPUBLISHED,
+					authors = listOf(author),
+				)
+				val updatedBook = currentBook.copy(title = "坊っちゃん")
+				every { repository.findById(1) } returns currentBook
+				every {
+					repository.update(
+						1,
+						"坊っちゃん",
+						1200,
+						PublicationStatus.UNPUBLISHED,
+						listOf(author),
+					)
+				} returns updatedBook
+
+				val book = service.update(
+					id = 1,
+					title = "坊っちゃん",
+					price = null,
+					authorIds = null,
+					publicationStatus = null,
+				)
+
+				book shouldBe updatedBook
+				verify(exactly = 1) { repository.findById(1) }
+				verify(exactly = 0) { repository.findAuthorsByIds(any()) }
+				verify(exactly = 1) {
+					repository.update(
+						1,
+						"坊っちゃん",
+						1200,
+						PublicationStatus.UNPUBLISHED,
+						listOf(author),
+					)
+				}
+			}
+		}
+
+		context("更新項目が未指定の場合") {
+			it("InvalidBookException を投げる") {
+				val repository = mockk<BookRepository>()
+				val service = BookService(repository)
+
+				val exception = shouldThrow<InvalidBookException> {
+					service.update(1, null, null, null, null)
+				}
+
+				exception.message shouldBe "title, price, authorIds, or publicationStatus is required"
+				verify(exactly = 0) { repository.findById(any()) }
+				verify(exactly = 0) { repository.update(any(), any(), any(), any(), any()) }
+			}
+		}
+
 		context("書籍IDが存在しない場合") {
 			it("BookNotFoundException を投げる") {
 				val repository = mockk<BookRepository>()
