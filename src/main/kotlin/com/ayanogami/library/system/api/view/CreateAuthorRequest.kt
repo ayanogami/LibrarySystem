@@ -1,4 +1,4 @@
-package com.ayanogami.library.system.api.author.view
+package com.ayanogami.library.system.api.view
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.PastOrPresent

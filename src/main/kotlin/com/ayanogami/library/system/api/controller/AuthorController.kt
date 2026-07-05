@@ -1,9 +1,9 @@
-package com.ayanogami.library.system.api.author.controller
+package com.ayanogami.library.system.api.controller
 
-import com.ayanogami.library.system.api.author.service.AuthorService
-import com.ayanogami.library.system.api.author.view.AuthorResponse
-import com.ayanogami.library.system.api.author.view.CreateAuthorRequest
-import com.ayanogami.library.system.api.author.view.UpdateAuthorRequest
+import com.ayanogami.library.system.api.service.AuthorService
+import com.ayanogami.library.system.api.view.AuthorResponse
+import com.ayanogami.library.system.api.view.CreateAuthorRequest
+import com.ayanogami.library.system.api.view.UpdateAuthorRequest
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

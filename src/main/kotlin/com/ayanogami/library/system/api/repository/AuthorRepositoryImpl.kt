@@ -1,6 +1,6 @@
-package com.ayanogami.library.system.api.author.repository
+package com.ayanogami.library.system.api.repository
 
-import com.ayanogami.library.system.api.author.model.Author
+import com.ayanogami.library.system.api.model.Author
 import com.ayanogami.library.system.api.jooq.generated.Tables.AUTHORS
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
