@@ -26,9 +26,9 @@ class BookRepositoryImpl(
 			.orderBy(AUTHORS.ID)
 			.fetch { record ->
 				Author(
-					id = record.get(AUTHORS.ID)!!,
-					name = record.get(AUTHORS.NAME)!!,
-					birthDate = record.get(AUTHORS.BIRTH_DATE)!!,
+					id = requireRecordValue(record.get(AUTHORS.ID), "author id"),
+					name = requireRecordValue(record.get(AUTHORS.NAME), "author name"),
+					birthDate = requireRecordValue(record.get(AUTHORS.BIRTH_DATE), "author birth date"),
 				)
 			}
 	}
@@ -42,10 +42,12 @@ class BookRepositoryImpl(
 			?: return null
 
 		return Book(
-			id = bookRecord.get(BOOKS.ID)!!,
-			title = bookRecord.get(BOOKS.TITLE)!!,
-			price = bookRecord.get(BOOKS.PRICE)!!,
-			publicationStatus = PublicationStatus.valueOf(bookRecord.get(BOOKS.PUBLICATION_STATUS)!!),
+			id = requireRecordValue(bookRecord.get(BOOKS.ID), "book id"),
+			title = requireRecordValue(bookRecord.get(BOOKS.TITLE), "book title"),
+			price = requireRecordValue(bookRecord.get(BOOKS.PRICE), "book price"),
+			publicationStatus = PublicationStatus.valueOf(
+				requireRecordValue(bookRecord.get(BOOKS.PUBLICATION_STATUS), "book publication status"),
+			),
 			authors = findAuthorsByBookId(id),
 		)
 	}
@@ -65,7 +67,7 @@ class BookRepositoryImpl(
 			.fetchOne()
 			?: error("Failed to create book")
 
-		val bookId = bookRecord.get(BOOKS.ID)!!
+		val bookId = requireRecordValue(bookRecord.get(BOOKS.ID), "book id")
 
 		authors.forEach { author ->
 			dsl
@@ -77,9 +79,11 @@ class BookRepositoryImpl(
 
 		return Book(
 			id = bookId,
-			title = bookRecord.get(BOOKS.TITLE)!!,
-			price = bookRecord.get(BOOKS.PRICE)!!,
-			publicationStatus = PublicationStatus.valueOf(bookRecord.get(BOOKS.PUBLICATION_STATUS)!!),
+			title = requireRecordValue(bookRecord.get(BOOKS.TITLE), "book title"),
+			price = requireRecordValue(bookRecord.get(BOOKS.PRICE), "book price"),
+			publicationStatus = PublicationStatus.valueOf(
+				requireRecordValue(bookRecord.get(BOOKS.PUBLICATION_STATUS), "book publication status"),
+			),
 			authors = authors,
 		)
 	}
@@ -115,10 +119,12 @@ class BookRepositoryImpl(
 		}
 
 		return Book(
-			id = bookRecord.get(BOOKS.ID)!!,
-			title = bookRecord.get(BOOKS.TITLE)!!,
-			price = bookRecord.get(BOOKS.PRICE)!!,
-			publicationStatus = PublicationStatus.valueOf(bookRecord.get(BOOKS.PUBLICATION_STATUS)!!),
+			id = requireRecordValue(bookRecord.get(BOOKS.ID), "book id"),
+			title = requireRecordValue(bookRecord.get(BOOKS.TITLE), "book title"),
+			price = requireRecordValue(bookRecord.get(BOOKS.PRICE), "book price"),
+			publicationStatus = PublicationStatus.valueOf(
+				requireRecordValue(bookRecord.get(BOOKS.PUBLICATION_STATUS), "book publication status"),
+			),
 			authors = authors,
 		)
 	}
@@ -133,9 +139,9 @@ class BookRepositoryImpl(
 			.orderBy(AUTHORS.ID)
 			.fetch { record ->
 				Author(
-					id = record.get(AUTHORS.ID)!!,
-					name = record.get(AUTHORS.NAME)!!,
-					birthDate = record.get(AUTHORS.BIRTH_DATE)!!,
+					id = requireRecordValue(record.get(AUTHORS.ID), "author id"),
+					name = requireRecordValue(record.get(AUTHORS.NAME), "author name"),
+					birthDate = requireRecordValue(record.get(AUTHORS.BIRTH_DATE), "author birth date"),
 				)
 			}
 }
