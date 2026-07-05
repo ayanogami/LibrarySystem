@@ -1,6 +1,6 @@
-package com.ayanogami.library.system.api.author.repository
+package com.ayanogami.library.system.api.repository
 
-import com.ayanogami.library.system.api.author.model.Author
+import com.ayanogami.library.system.api.model.Author
 import java.time.LocalDate
 
 interface AuthorRepository {

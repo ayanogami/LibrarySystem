@@ -1,4 +1,4 @@
-package com.ayanogami.library.system.api.author.model
+package com.ayanogami.library.system.api.model
 
 import java.time.LocalDate
 

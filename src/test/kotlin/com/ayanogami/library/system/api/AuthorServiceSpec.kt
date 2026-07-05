@@ -1,10 +1,10 @@
-package com.ayanogami.library.system.api.author
+package com.ayanogami.library.system.api
 
-import com.ayanogami.library.system.api.author.exception.AuthorNotFoundException
-import com.ayanogami.library.system.api.author.exception.InvalidAuthorException
-import com.ayanogami.library.system.api.author.model.Author
-import com.ayanogami.library.system.api.author.repository.AuthorRepository
-import com.ayanogami.library.system.api.author.service.AuthorService
+import com.ayanogami.library.system.api.exception.AuthorNotFoundException
+import com.ayanogami.library.system.api.exception.InvalidAuthorException
+import com.ayanogami.library.system.api.model.Author
+import com.ayanogami.library.system.api.repository.AuthorRepository
+import com.ayanogami.library.system.api.service.AuthorService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe

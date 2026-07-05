@@ -1,4 +1,4 @@
-package com.ayanogami.library.system.api.author
+package com.ayanogami.library.system.api
 
 import com.ayanogami.library.system.api.jooq.generated.Tables.AUTHORS
 import io.kotest.core.spec.style.DescribeSpec

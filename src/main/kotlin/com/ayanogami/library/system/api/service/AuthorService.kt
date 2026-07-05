@@ -1,9 +1,9 @@
-package com.ayanogami.library.system.api.author.service
+package com.ayanogami.library.system.api.service
 
-import com.ayanogami.library.system.api.author.exception.AuthorNotFoundException
-import com.ayanogami.library.system.api.author.exception.InvalidAuthorException
-import com.ayanogami.library.system.api.author.model.Author
-import com.ayanogami.library.system.api.author.repository.AuthorRepository
+import com.ayanogami.library.system.api.exception.AuthorNotFoundException
+import com.ayanogami.library.system.api.exception.InvalidAuthorException
+import com.ayanogami.library.system.api.model.Author
+import com.ayanogami.library.system.api.repository.AuthorRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 

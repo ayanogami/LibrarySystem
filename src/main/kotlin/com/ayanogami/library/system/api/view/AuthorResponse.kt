@@ -1,6 +1,6 @@
-package com.ayanogami.library.system.api.author.view
+package com.ayanogami.library.system.api.view
 
-import com.ayanogami.library.system.api.author.model.Author
+import com.ayanogami.library.system.api.model.Author
 import java.time.LocalDate
 
 data class AuthorResponse(
