@@ -210,7 +210,7 @@ class AuthorApiSpec : DescribeSpec({
 			}
 		}
 
-		describe("GET /authors/{authorId}/books") {
+		describe("GET /books?authorId={authorId}") {
 			context("著者に書籍が紐づく場合") {
 				it("著者情報と書籍一覧を返す") {
 					val authorId = createAuthor()
@@ -237,7 +237,7 @@ class AuthorApiSpec : DescribeSpec({
 						authorIds = listOf(otherAuthorId),
 					)
 
-					mockMvc.perform(get("/authors/$authorId/books"))
+					mockMvc.perform(get("/books").param("authorId", authorId.toString()))
 						.andExpect(status().isOk)
 						.andExpect(jsonPath("$.id").value(authorId))
 						.andExpect(jsonPath("$.name").value("夏目漱石"))
@@ -258,7 +258,7 @@ class AuthorApiSpec : DescribeSpec({
 				it("空の書籍一覧を返す") {
 					val authorId = createAuthor()
 
-					mockMvc.perform(get("/authors/$authorId/books"))
+					mockMvc.perform(get("/books").param("authorId", authorId.toString()))
 						.andExpect(status().isOk)
 						.andExpect(jsonPath("$.id").value(authorId))
 						.andExpect(jsonPath("$.name").value("夏目漱石"))
@@ -269,7 +269,7 @@ class AuthorApiSpec : DescribeSpec({
 
 			context("著者IDが存在しない場合") {
 				it("404 Not Found を返す") {
-					mockMvc.perform(get("/authors/999999/books"))
+					mockMvc.perform(get("/books").param("authorId", "999999"))
 						.andExpect(status().isNotFound)
 				}
 			}
