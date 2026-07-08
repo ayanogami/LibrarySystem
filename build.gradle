@@ -13,6 +13,7 @@ version = '0.0.1-SNAPSHOT'
 def kotestVersion = '6.2.0'
 def jooqVersion = '3.21.5'
 def mockkVersion = '1.14.11'
+def springdocVersion = '3.0.3'
 
 java {
 	toolchain {
@@ -31,6 +32,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.flywaydb:flyway-database-postgresql'
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
+	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion"
 	implementation 'tools.jackson.module:jackson-module-kotlin'
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	runtimeOnly 'org.postgresql:postgresql'
