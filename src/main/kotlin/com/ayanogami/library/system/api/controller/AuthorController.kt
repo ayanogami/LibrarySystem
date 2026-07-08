@@ -15,8 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -26,53 +26,55 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/authors")
 @Tag(name = "Authors", description = "著者API")
 class AuthorController(
-	private val authorService: AuthorService,
+    private val authorService: AuthorService,
 ) {
-	@PostMapping
-	@Operation(summary = "著者を作成する")
-	@ApiResponses(
-		value = [
-			ApiResponse(responseCode = "201", description = "Created"),
-			ApiResponse(
-				responseCode = "400",
-				description = "Bad Request",
-				content = [Content(schema = Schema(implementation = ErrorResponse::class))],
-			),
-		],
-	)
-	fun create(@Valid @RequestBody request: CreateAuthorRequest): ResponseEntity<AuthorResponse> {
-		val author = authorService.create(request.name, request.birthDate)
+    @PostMapping
+    @Operation(summary = "著者を作成する")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "201", description = "Created"),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad Request",
+                content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+            ),
+        ],
+    )
+    fun create(
+        @Valid @RequestBody request: CreateAuthorRequest,
+    ): ResponseEntity<AuthorResponse> {
+        val author = authorService.create(request.name, request.birthDate)
 
-		return ResponseEntity
-			.status(HttpStatus.CREATED)
-			.body(AuthorResponse.from(author))
-	}
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(AuthorResponse.from(author))
+    }
 
-	@PatchMapping("/{authorId}")
-	@Operation(summary = "著者を更新する")
-	@ApiResponses(
-		value = [
-			ApiResponse(responseCode = "200", description = "OK"),
-			ApiResponse(
-				responseCode = "400",
-				description = "Bad Request",
-				content = [Content(schema = Schema(implementation = ErrorResponse::class))],
-			),
-			ApiResponse(
-				responseCode = "404",
-				description = "Not Found",
-				content = [Content(schema = Schema(implementation = ErrorResponse::class))],
-			),
-		],
-	)
-	fun update(
-		@Parameter(description = "著者ID", example = "1")
-		@PathVariable
-		authorId: Long,
-		@Valid @RequestBody request: UpdateAuthorRequest,
-	): ResponseEntity<AuthorResponse> {
-		val author = authorService.update(authorId, request.name, request.birthDate)
+    @PatchMapping("/{authorId}")
+    @Operation(summary = "著者を更新する")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "OK"),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad Request",
+                content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Not Found",
+                content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+            ),
+        ],
+    )
+    fun update(
+        @Parameter(description = "著者ID", example = "1")
+        @PathVariable
+        authorId: Long,
+        @Valid @RequestBody request: UpdateAuthorRequest,
+    ): ResponseEntity<AuthorResponse> {
+        val author = authorService.update(authorId, request.name, request.birthDate)
 
-		return ResponseEntity.ok(AuthorResponse.from(author))
-	}
+        return ResponseEntity.ok(AuthorResponse.from(author))
+    }
 }

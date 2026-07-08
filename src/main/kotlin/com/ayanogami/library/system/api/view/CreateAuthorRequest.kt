@@ -7,11 +7,10 @@ import java.time.LocalDate
 
 @Schema(description = "著者作成リクエスト")
 data class CreateAuthorRequest(
-	@field:Schema(description = "著者名", example = "夏目漱石")
-	@field:NotBlank
-	val name: String,
-
-	@field:Schema(description = "生年月日", example = "1867-02-09")
-	@field:PastOrPresent
-	val birthDate: LocalDate,
+    @field:Schema(description = "著者名", example = "夏目漱石")
+    @field:NotBlank
+    val name: String,
+    @field:Schema(description = "生年月日", example = "1867-02-09")
+    @field:PastOrPresent
+    val birthDate: LocalDate,
 )
