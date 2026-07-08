@@ -334,7 +334,7 @@ PATCH /books/{bookId}
 著者に紐づく書籍一覧を取得します。
 
 ```http
-GET /authors/{authorId}/books
+GET /books?authorId={authorId}
 ```
 
 #### Response
