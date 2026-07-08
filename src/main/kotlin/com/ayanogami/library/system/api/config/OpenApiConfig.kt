@@ -6,10 +6,11 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @OpenAPIDefinition(
-	info = Info(
-		title = "LibrarySystemAPI",
-		version = "0.0.1",
-		description = "書籍管理システムのバックエンドAPI",
-	),
+    info =
+        Info(
+            title = "LibrarySystemAPI",
+            version = "0.0.1",
+            description = "書籍管理システムのバックエンドAPI",
+        ),
 )
 class OpenApiConfig
